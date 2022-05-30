@@ -14,7 +14,8 @@ typedef struct editor_config{
     int cx, cy;
     int screenrow, screencol;
     int numrows;
-    erow row;
+    erow *row; //pointer so that multiple rows can be stored
+    int row_offset; //Keep track of what row user is at while scrolling
     struct termios orig_termios;
 } editor_config;
 
@@ -38,4 +39,6 @@ void moveCursor(int c);
 int getWindowSize(int *rows, int* cols);
 void drawRows(abuf*);
 void editorOpen(char*);
+void appendRow(char*, size_t);
+void editorScroll(void);
 #endif

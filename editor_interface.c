@@ -6,6 +6,8 @@ void init_editor(){
     E.cy = 0;
 
     E.numrows = 0; //Number of editor rows
+    E.row = NULL;
+    E.row_offset = 0;
     if(getWindowSize(&E.screenrow, &E.screencol) == -1) die("getWindowSize");// Writing window size to  struct
 
 }
@@ -101,6 +103,8 @@ void editorKeyPress(){
 }
 
 void editorRefreshScreen(){
+    editorScroll();
+
     abuf ab;
     initAbuf(&ab);
 
@@ -109,7 +113,7 @@ void editorRefreshScreen(){
     drawRows(&ab);
 
     char buffer[32];
-    snprintf(buffer, sizeof(buffer), "\x1b[%d;%dH", E.cy + 1, E.cx + 1);
+    snprintf(buffer, sizeof(buffer), "\x1b[%d;%dH", (E.cy - E.row_offset) + 1, E.cx + 1);
     appendAB(&ab, buffer, strlen(buffer));
 
     appendAB(&ab, "\x1b[?25h", 6);
@@ -144,7 +148,7 @@ void moveCursor(int key){
                 E.cy--;
             break;
         case ARROW_DOWN:
-            if(E.cy != E.screenrow - 1)
+            if(E.cy < E.numrows)
                 E.cy++;
             break;
         case ARROW_LEFT:
@@ -171,14 +175,17 @@ int getWindowSize(int *rows, int *cols) {
 }
 
 void drawRows(abuf* ab){
-    for(int y = 0; y < E.screenrow; y++){
-        if(y >= E.numrows){
+    int y;
+    for(y = 0; y < E.screenrow; y++){
+        int filerow = y + E.row_offset;
+        if(filerow >= E.numrows){
             appendAB(ab, "~", 1);
         }
         else{
-            int len = E.row.size;
-            if(len > E.screencol) len = E.screencol;
-            appendAB(ab, E.row.chars, len);
+            int len = E.row[filerow].size;
+            if(len > E.screencol) 
+                len = E.screencol;
+            appendAB(ab, E.row[filerow].chars, len);
         }
         appendAB(ab, "\x1b[K", 3);
         if(y < E.screenrow - 1){
@@ -194,20 +201,35 @@ void editorOpen(char* filename){
 
     char *line = NULL;
     size_t linecap = 0;
-    ssize_t linelen = getline(&line, &linecap, fp);
+    ssize_t linelen;
 
-    if(linelen != -1){
-        while(linelen > 0 && (line[linelen - 1] == '\n' || line[linelen - 1] == '\r'))
+    while((linelen = getline(&line, &linecap, fp)) != -1){
+        while(linelen > 0 && (line[linelen - 1] == '\n' || line[linelen - 1] == '\r')){
+
             linelen--;  //Length of line excluding newline and carriage return
-    
-        E.row.size = linelen;
-        E.row.chars = (char*)malloc(linelen + 1);
-        memcpy(E.row.chars, line, linelen);
-        E.row.chars[linelen] = '\0';
-        E.numrows = 1;
+            appendRow(line, linelen);
+        }
     }
     free(line);
     fclose(fp);
 
 }
 
+void appendRow(char *s, size_t len){
+    E.row = realloc(E.row, sizeof(erow)*(E.numrows + 1));
+    int at = E.numrows;
+    E.row[at].size = len;
+    E.row[at].chars = malloc(len + 1);
+    memcpy(E.row[at].chars, s, len);
+    E.row[at].chars[len] = '\0';
+    E.numrows += 1;
+}
+
+void editorScroll() {
+  if (E.cy < E.row_offset) {
+    E.row_offset = E.cy;
+  }
+  if (E.cy >= E.row_offset + E.screenrow) {
+    E.row_offset = E.cy - E.screenrow + 1;
+  }
+}
