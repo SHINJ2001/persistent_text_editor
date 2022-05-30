@@ -2,9 +2,10 @@
 
 int main(){
     enableRawMode();
+    init_editor();
     while(1){
         editorKeyPress();   
-        editorRefeshScreen();
+        editorRefreshScreen();
     }
     return 0;
 }

@@ -1,18 +1,14 @@
-tyepdef struct abuf {
-    char *b;
-    int len;
-} abuf;
-
-void initAbuf(abuf* ab, int Len){
-    ab -> b = (char*)malloc(sizeof(char)*len);
-    ab -> len = Len;
+#include "headers.h"
+void initAbuf(abuf* ab){
+    ab -> b = NULL;
+    ab->len = 0;
 }
 
 void appendAB(abuf *ab, char* string, int Len){
-    char *new = realloc(ab->b, ab->len + len);
-    memcpy(&new[ab->len], string, len);
+    char *new = realloc(ab->b, ab->len + Len);
+    memcpy(&new[ab->len], string, Len);
     ab->b = new;
-    ab->len += len;
+    ab->len += Len;
 }
 
 void freeAB(abuf *ab){

@@ -5,6 +5,6 @@ typedef struct abuf {
     int len;
 } abuf;
 
-void initAbuf(abuf* ab, int Len);
-void appendeAB(abuf*, char*, int);
+void initAbuf(abuf* ab);
+void appendAB(abuf*, char*, int);
 void freeAB(abuf*);
