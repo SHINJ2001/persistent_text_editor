@@ -9,6 +9,7 @@
 #include <sys/ioctl.h>
 #include <errno.h>
 #include <sys/types.h>
+#include <fcntl.h>
 
 #include "appendbuffer.h"
 #include "editor_interface.h"

@@ -16,10 +16,14 @@ typedef struct editor_config{
     int numrows;
     erow *row; //pointer so that multiple rows can be stored
     int row_offset; //Keep track of what row user is at while scrolling
+    int col_offset; //Keep track of what column user is at while scrolling
+    char *filename;
+    int dirty; //Check for any unsaved changes 
     struct termios orig_termios;
 } editor_config;
 
 enum editorkey{
+    BACKSPACE = 127, 
     ARROW_LEFT = 1000,
     ARROW_RIGHT , 
     ARROW_UP ,
@@ -39,6 +43,13 @@ void moveCursor(int c);
 int getWindowSize(int *rows, int* cols);
 void drawRows(abuf*);
 void editorOpen(char*);
-void appendRow(char*, size_t);
+void insertRow(int, char*, size_t);
 void editorScroll(void);
+void editorRowInsertChar(erow* row, int at, int c);
+void insertChar(int c);
+char* rowToString(int *buflen);
+void editorSave(void);
+void editorDelChar(void);
+void deleteChar(erow *row, int at);
+
 #endif
