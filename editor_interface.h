@@ -8,6 +8,8 @@
 typedef struct erow{
     int size; //For storing rows of text stored
     char *chars;
+    int rsize;
+    char *render;
 } erow;
 
 typedef struct editor_config{
@@ -18,8 +20,12 @@ typedef struct editor_config{
     int row_offset; //Keep track of what row user is at while scrolling
     int col_offset; //Keep track of what column user is at while scrolling
     char *filename;
+    erow** pArray;
+    int version;
     int dirty; //Check for any unsaved changes 
     struct termios orig_termios;
+    char statusmsg[80];
+    time_t statusmsg_time;
 } editor_config;
 
 enum editorkey{
@@ -42,7 +48,7 @@ int GetCursorPos(int *rows, int* cols);
 void moveCursor(int c);
 int getWindowSize(int *rows, int* cols);
 void drawRows(abuf*);
-void editorOpen(char*);
+void editorOpen(char* filename, int version);
 void insertRow(int, char*, size_t);
 void editorScroll(void);
 void editorRowInsertChar(erow* row, int at, int c);
@@ -51,5 +57,12 @@ char* rowToString(int *buflen);
 void editorSave(void);
 void editorDelChar(void);
 void deleteChar(erow *row, int at);
+void editorInsertNewline(void);
+void delRow(int at);
+void freeRow(erow *row);
+void editorDrawStatusBar(struct abuf *ab);
+void editorSetStatusMessage(const char *fmt, ...);
+void editorDrawMessageBar(abuf *ab);
+void editorUpdateRow(erow *row);
 
 #endif

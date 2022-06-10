@@ -10,6 +10,8 @@
 #include <errno.h>
 #include <sys/types.h>
 #include <fcntl.h>
+#include <stdarg.h>
+#include <time.h>
 
 #include "appendbuffer.h"
 #include "editor_interface.h"
