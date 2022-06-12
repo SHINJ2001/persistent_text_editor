@@ -20,13 +20,14 @@ typedef struct editor_config{
     int row_offset; //Keep track of what row user is at while scrolling
     int col_offset; //Keep track of what column user is at while scrolling
     char filename[100];
-    erow** pArray;
     int version;
     int dirty; //Check for any unsaved changes 
     struct termios orig_termios;
     char statusmsg[80];
     time_t statusmsg_time;
     int rx;
+    int first;
+
 } editor_config;
 
 enum editorkey{
