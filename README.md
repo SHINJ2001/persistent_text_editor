@@ -2,7 +2,6 @@
 A simple text editor which stores versions of text files
 
 # How to run?
-<<<<<<< HEAD
 On your terminal type ./editor \<filename\> \<version\>to open the required file. You can also simply type ./editor to generate a file.
 You can also open the original file by not mentioning the version number or
 simply using zero.
@@ -18,6 +17,3 @@ modified and all the previous data is lost.
 Use 'CTRL+Q' to quit from the editor.
 Restores the terminal back to its original form.
 
-=======
-On your terminal type ./editor \<filename\> to open the required file. You can also simply type ./editor to generate a file.
->>>>>>> b45480eeb8b96eda229e7021d83b6e70d3919e3d
