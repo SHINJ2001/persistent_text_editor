@@ -27,6 +27,7 @@ typedef struct editor_config{
     time_t statusmsg_time;
     int rx;
     int first;
+    int count;
 
 } editor_config;
 

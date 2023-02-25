@@ -1,2 +1,0 @@
-hello, this is a test sample for testing version control.
-This statement is written in the first version of the file saved.

@@ -1,3 +1,0 @@
-hello, this is a test sample for testing version control.
-This statement is written in the second version of the file saved.
-Used version control to access things better :))

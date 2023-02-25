@@ -18,6 +18,7 @@ void init_editor(){
     E.statusmsg_time = 0;
     E.rx = 0;
     E.filename[0] = '\0';
+    E.count = 1;
 
     if(getWindowSize(&E.screenrow, &E.screencol) == -1) die("getWindowSize");// Writing window size to  struct
     E.screenrow -= 2;
@@ -165,7 +166,7 @@ void editorRefreshScreen(){
     editorDrawMessageBar(&ab);
 
     char buffer[32];
-    snprintf(buffer, sizeof(buffer), "\x1b[%d;%dH", (E.cy - E.row_offset) + 1, (E.rx - E.col_offset + 1));
+    snprintf(buffer, sizeof(buffer), "\x1b[%d;%dH",(E.cy - E.row_offset) + 1, (E.rx - E.col_offset + 1));
     appendAB(&ab, buffer, strlen(buffer));
 
     appendAB(&ab, "\x1b[?25h", 6);
@@ -273,7 +274,7 @@ void drawRows(abuf* ab){
             }
         }
         else{
-            int len = E.row[filerow].size - E.col_offset;
+            int len = E.row[filerow].rsize - E.col_offset;
             if (len < 0)
                 len = 0;
 
@@ -475,7 +476,6 @@ void editorSave(){
         if(E.filename[0] == '\0'){
             editorSetStatusMessage("Save aborted");
         }
-        return;
     }
 
     int len; 
